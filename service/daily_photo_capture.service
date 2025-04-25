@@ -1,0 +1,14 @@
+[Unit]
+Description=Make photos from 7:00-19:00 12 time
+After=network.target
+
+[Service]
+ExecStart=/home/alex/projects/DiCam_235_remote_control/venv/bin/daily_photo_capture --start-hour 7 --end-hour 19 --photos-per-interval 12 --debug
+WorkingDirectory=/home/alex/projects/DiCam_235_remote_control
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=alex
+
+[Install]
+WantedBy=multi-user.target

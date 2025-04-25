@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dicam_235_client"
+version = "0.0.1"
+dependencies = [
+]
+requires-python = ">=3.10"
+authors = [
+  {name = "Alexey Kalmykov", email = "alexlexx1@gmail.com"},
+]
+
+description = "control cleint for camera DiCam 235"
+readme = "readme.md"
+license = {file = "LICENSE.txt"}
+keywords = ["DiCam 235", "client"]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+
+[project.urls]
+Homepage = "https://alexlexx.com"
+Documentation = ""
+Repository = "https://github.com/AlexLexx706/DiCam_235_remote_control"
+
+[project.gui-scripts]
+dicam_235_keyboard = "tools.manual_control:main"
+daily_photo_capture = "tools.daily_photo_capture:main"

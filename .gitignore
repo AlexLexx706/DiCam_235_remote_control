@@ -1,1 +1,3 @@
 dump_*
+*__pycache__
+venv

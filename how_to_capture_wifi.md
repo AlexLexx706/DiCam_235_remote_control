@@ -1,7 +1,3 @@
-# Simple remote control for action camera DiCam 235
-* First, connect to the camera's WiFi
-* Run script: `python3 camera_control/camera_capture.py`
-
 ## Set of Commands for Capturing WiFi Traffic and Reverse-Engineering Camera Protocol:
 `sudo airmon-ng start wlp0s20f3`
 `sudo airmon-ng stop wlp0s20f3mon`
@@ -23,6 +19,3 @@
 
 ### Run Wireshark to Analyze the Recorded Log:
 `wireshark`
-
-## How to display video stream from camera:
-http://192.168.25.1:8080/?action=stream
