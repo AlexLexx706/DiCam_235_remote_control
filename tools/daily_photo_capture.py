@@ -1,6 +1,7 @@
 """
 This script captures photos from a camera at regular intervals during the day.
 """
+import math
 import time
 import datetime
 import logging
@@ -91,8 +92,17 @@ def main():
             now = datetime.datetime.now()
             if is_time_to_shoot(now, start_hour, end_hour):
                 LOG.info("Taking photo at %s", now.strftime("%H:%M:%S"))
+                start_time = datetime.datetime(
+                    year=now.year, month=now.month,
+                    day=now.day, hour=start_hour
+                )
+                offset = (now - start_time).total_seconds()
                 take_photo()
-                time.sleep(photo_interval_seconds)
+                # wait for the next interval
+                sleep_period = (
+                    1 - math.modf(offset / photo_interval_seconds)[0]
+                ) * photo_interval_seconds + 0.1
+                time.sleep(sleep_period)
             else:
                 LOG.debug("Outside of shooting time, sleeping...")
                 tomorrow = now + datetime.timedelta(days=1)
