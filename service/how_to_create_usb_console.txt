@@ -1,0 +1,18 @@
+sudo systemctl enable serial-getty@ttyGS0.service
+sudo systemctl start serial-getty@ttyGS0.service
+sudo systemctl status serial-getty@ttyGS0.service
+
+sudo systemctl edit serial-getty@ttyGS0.service
+
+
+[Unit]
+Description=Serial Getty on ttyGS0 (early start)
+ConditionPathExists=/dev/ttyGS0
+After=dev-ttyGS0.device
+After=systemd-user-sessions.service
+
+
+
+
+sudo systemctl daemon-reload
+journalctl -u serial-getty@ttyGS0.service -e
