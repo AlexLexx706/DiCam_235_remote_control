@@ -72,19 +72,6 @@ While connected to the camera’s Wi-Fi, open your browser or VLC and go to:
 `http://192.168.25.1:8080/?action=stream`
 
 This stream runs independently of the control client.
-
-## Project Structure:
-    DiCam_235_remote_control/
-    ├── dicam_235_client/           # Python package with camera client
-    │   └── __init__.py             # DiCam235Client class, TCP command interface
-    ├── tools/                      # Usage examples and utilities
-    │   ├── manual_control.py       # Interactive CLI camera control
-    │   ├── daily_photo_capture.py  # Daily automated photo capture
-    │   └── __init__.py
-    ├── pyproject.toml              # Project metadata and install config
-    ├── LICENSE.txt                 # MIT License
-    ├── README.md                   # You are here
-
 ## Contact:
 Author: Alexey Kalmykov
 
