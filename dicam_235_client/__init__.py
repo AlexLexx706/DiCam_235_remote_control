@@ -17,14 +17,17 @@ class DiCam235Client:
 
     HEADER = b"GPSOCKET"
     RESULT_PATERN = re.compile(b"GPSOCKET(.{6})")
-    READ_SIZE = 1024
+    READ_SIZE = 2048
 
     CMD_TAKE_PHOTO = 0x0002
     CMD_GET_SETTINGS = 0x0200
     CMD_CHANGE_MODE = 0x0000
+    CMD_REQUEST_FILES_COUNT = 0x0203  # return numbers of files
+    CMD_REQUEST_PREVIEW = 0x0403  # return preview of image - jpg
+    CMD_REQUEST_FILE = 0x0503  # return file data - jpg
 
-    MODE_PHOTO = 0x01
-    MODE_VIDEO = 0x00
+    MODE_PHOTO = b'\x01'
+    MODE_VIDEO = b'\x00'
 
     ERROR_CODE_OK = 0x02
     ERROR_CODE_FAIL = 0x03
@@ -66,11 +69,14 @@ class DiCam235Client:
         self.close()
         return False
 
-    def send_cmd(self, cmd: int, param: int | None) -> tuple[int, bytes | int]:
+    def send_cmd(
+        self, cmd: int, param: bytes | None,
+        multy_packet: bool = False
+    ) -> tuple[int, bytes | int]:
         """Send command to the server and receive response.
         Args:
             cmd (int): Command to send.
-            param (int | None): Parameter for the command.
+            param (bytes | None): Parameter for the command.
         Returns:
             tuple: Tuple containing the response code and payload
                 or error_code.
@@ -83,7 +89,7 @@ class DiCam235Client:
         packet = self.HEADER + struct.pack("<HH", 0x01, cmd)
 
         if param is not None:
-            packet += struct.pack("<B", param)
+            packet += param
 
         LOG.debug("Send packet:%s", packet)
         try:
@@ -140,7 +146,8 @@ class DiCam235Client:
                         # return payload
                         if size_or_code == 0:
                             LOG.debug(
-                                "result:%s, paylod:%s", result_type, payload)
+                                "multy-packet result:%s, paylod:%s len:%s",
+                                result_type, payload[:10], len(payload))
                             return result_type, payload
 
                         # collecting payload
@@ -148,9 +155,20 @@ class DiCam235Client:
 
                         if len(data) >= payload_end:
                             part = data[header.end(): payload_end]
-                            # LOG.debug(f"part:{part}")
                             payload += part
                             data = data[payload_end:]
+
+                            # is single packet and all done return result
+                            if (
+                                not multy_packet and
+                                len(payload) == size_or_code
+                            ):
+                                LOG.debug(
+                                    "single-packet result:%s, "
+                                    "paylod:%s len:%s",
+                                    result_type, payload[:10], len(payload))
+                                return result_type, payload
+
                             decode_state = 0
                         # waiting for more data
                         else:
